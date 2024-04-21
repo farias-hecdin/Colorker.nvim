@@ -1,14 +1,14 @@
 local M = {}
 
 -- Buscar el archivo "*.css" en el directorios actual y superiores.
-M.find_file = function(filename, directory, attempt, limit)
+M.find_file = function(fname, dir, attempt, limit)
   if not attempt or attempt > limit then
     vim.print("[Colorker.nvim] Attempt limit reached. Operation cancelled.")
     return
   end
 
-  directory = directory or "."
-  local command = "ls -1 " ..directory
+  dir = dir or "."
+  local command = "ls -1 " ..dir
   local result = {}
 
   local handle = io.popen(command)
@@ -17,25 +17,25 @@ M.find_file = function(filename, directory, attempt, limit)
   end
 
   for file in handle:lines() do
-    if file == filename then
-      return directory .. filename
+    if file == fname then
+      return dir .. fname
     end
     table.insert(result, file)
   end
   handle:close()
 
-  directory = ""
+  dir = ""
   for i = 1, attempt do
-    directory = directory .. "../"
+    dir = dir .. "../"
   end
 
-  return M.find_file(filename, directory, attempt + 1, limit)
+  return M.find_file(fname, dir, attempt + 1, limit)
 end
 
 -- Abrir un archivo y retornar su contenido.
-M.open_file = function(filename, variable_pattern, color_pattern)
+M.open_file = function(fname, variable_pattern, color_pattern)
   local data = {}
-  local file = assert(io.open(filename, "r"), "[Colorker.nvim] Error: Could not open file " .. filename)
+  local file = assert(io.open(fname, "r"), "[Colorker.nvim] Error: Could not open file " .. fname)
 
   for line in file:lines() do
     local variable = string.match(line, variable_pattern)
