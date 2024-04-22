@@ -7,8 +7,8 @@ M.find_file = function(fname, dir, attempt, limit)
     return
   end
 
-  dir = dir or "."
-  local command = "ls -1 " ..dir
+  dir = dir or ""
+  local command = "ls -1 " .. dir
   local result = {}
 
   local handle = io.popen(command)
@@ -24,7 +24,6 @@ M.find_file = function(fname, dir, attempt, limit)
   end
   handle:close()
 
-  dir = ""
   for i = 1, attempt do
     dir = dir .. "../"
   end
