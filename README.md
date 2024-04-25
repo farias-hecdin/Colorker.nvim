@@ -62,6 +62,14 @@ require('colorker').setup({
 }
 ```
 
+### Comandos y atajos de teclado
+
+| Comandos           | Atajos de teclado | Descripción                         |
+| -------------------|------------------ | ----------------------------------- |
+| `Colorker`         | `<leader>cc`      | Activa el plugin y actualiza el resaltado de colores |
+
+Puedes desactivar los atajos de teclado predeterminados estableciendo la opción `disable_keymaps` en `true`
+
 ## Licencia
 
 Colorker.nvim está bajo la licencia MIT. Consulta el archivo `LICENSE` para obtener más información.
