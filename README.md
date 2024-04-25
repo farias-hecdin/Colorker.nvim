@@ -68,6 +68,8 @@ require('colorker').setup({
 | -------------------|------------------ | ----------------------------------- |
 | `Colorker`         | `<leader>cc`      | Activa el plugin y actualiza el resaltado de colores |
 
+Puedes ampliar la búsqueda del archivo hacia arriba o seleccionar otro archivo utilizando el comando `:Colorker <number> <string>`. Simplemente reemplaza `<number>` con el número de niveles que deseas buscar hacia arriba y `<string>` con el nombre del archivo que deseas buscar.
+
 Puedes desactivar los atajos de teclado predeterminados estableciendo la opción `disable_keymaps` en `true`
 
 ## Licencia

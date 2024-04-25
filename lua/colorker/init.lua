@@ -38,8 +38,8 @@ end
 
 -- Crear un commando para la funcionalidad
 vim.api.nvim_create_user_command("Colorker", function(args)
-  local fname = args.fargs[1] or config.options.filename_to_track
-  local attempt_limit = tonumber(args.fargs[2] or config.options.parent_search_limit)
+  local attempt_limit = tonumber(args.fargs[1] or config.options.parent_search_limit)
+  local fname = args.fargs[2] or config.options.filename_to_track
 
   M.get_colors_from_file(fname, attempt_limit)
 end, {desc = "Track the colors of the CSS variables", nargs = "*"})
