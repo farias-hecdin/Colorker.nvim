@@ -22,10 +22,15 @@ M.setup = function(options)
     local filetypes = 'css'
     -- Create the keymaps for the specified filetypes
     vim.api.nvim_create_autocmd('FileType', {
-      desc = 'colorker.nvim keymaps',
+      desc = 'Colorker.nvim keymaps',
       pattern = filetypes,
       callback = function()
-        vim.keymap.set('n', '<leader>cx', "Colorker<CR>", keymaps_opts)
+        local keymaps = {
+          { '<leader>cc', ":Colorker<CR>" },
+        }
+        for _, keymap in ipairs(keymaps) do
+          vim.keymap.set('n', keymap[1], keymap[2], keymaps_opts)
+        end
       end,
     })
   end
@@ -34,7 +39,7 @@ end
 -- Crear un commando para la funcionalidad
 vim.api.nvim_create_user_command("Colorker", function(args)
   local fname = args.fargs[1] or config.options.filename_to_track
-  local attempt_limit = tonumber(args.fargs[1] or config.options.parent_search_limit)
+  local attempt_limit = tonumber(args.fargs[2] or config.options.parent_search_limit)
 
   M.get_colors_from_file(fname, attempt_limit)
 end, {desc = "Track the colors of the CSS variables", nargs = "*"})
