@@ -17,6 +17,9 @@ M.find_file = function(fname, dir, attempt, limit)
   for file in handle:lines() do
     if file == fname then
       handle:close()
+      if attempt == 1 then
+        return dir .. fname
+      end
       return dir .. "/" .. fname
     end
   end
