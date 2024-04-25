@@ -22,7 +22,7 @@ Usando [`folke/lazy.nvim`](https://github.com/folke/lazy.nvim):
         "mini.hipatterns"
     },
     config = true,
-    -- Si quieres configurar algunas opciones, sustituye la línea anterior con:
+    -- If you want to configure some options, replace the previous line with:
     -- config = function()
     -- end,
 }
@@ -35,10 +35,10 @@ local hipatterns = require("mini.hipatterns")
 local colorker = require("colorker")
 
 hipatterns.setup({
-    -- El resto de tus ajuste...
+    -- Your other settings...
     highlighters = {
         css_variables = colorker.get_settings()
-        -- El resto de tus ajuste...
+        -- Your other settings...
     }
 })
 ```
@@ -49,10 +49,16 @@ Estas son las opciones de configuración predeterminadas:
 
 ```lua
 require('colorker').setup({
-  parent_search_limit = 5, -- <number>
-  filename_to_track = "main", -- <string>
-  variable_pattern = "%-%-[-_%w]*color[-_%w]*", -- <string>
-  disable_keymaps = false, -- <boolean> Desabihilitar los atajos de teclado.
+  -- <number> Parent search limit (number of levels to search upwards)
+  parent_search_limit = 5,
+  -- <string> Name of the file to track (e.g. "main" for main.lua)
+  filename_to_track = "main",
+  -- <string> Pattern to search for variables containing "color"
+  variable_pattern = "%-%-[-_%w]*color[-_%w]*",
+  -- <string> Initial color for variables (in hexadecimal format, e.g. "#000000" for black)
+  initial_variable_color = "#000000",
+  -- <boolean> Indicates whether keymaps are disabled
+  disable_keymaps = false,
 }
 ```
 

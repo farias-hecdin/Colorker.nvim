@@ -6,8 +6,12 @@ local lch = require('colorker.colors.lch')
 local hsl = require('colorker.colors.hsl')
 local rgb = require('colorker.colors.rgb')
 
-local plugin_exists, plugin = pcall(require, "mini.hipatterns")
 local colors_from_file = {}
+
+local plugin_exists, plugin = pcall(require, "mini.hipatterns")
+if not plugin_exists then
+  return
+end
 
 M.setup = function(options)
   -- Merge the user-provided options with the default options
@@ -48,6 +52,7 @@ M.get_colors_from_file = function(fname, attempt_limit)
 
   local fpath = operations.find_file(fname, nil, 1, attempt_limit)
   if not fpath then
+    vim.print("[Colorker.nvim] Attempt limit reached. Operation cancelled.")
     return
   end
 
@@ -58,9 +63,6 @@ M.get_colors_from_file = function(fname, attempt_limit)
 
   colors_from_file = M.convert_color(data)
 
-  if not plugin_exists then
-    return
-  end
   vim.cmd('lua MiniHipatterns.update()')
 end
 
@@ -85,17 +87,13 @@ M.convert_color = function(data)
   return colors
 end
 
-
 M.get_settings = function()
-  if not plugin_exists then
-    return
-  end
 
   local data = {
-    pattern = "var%(%-%-[-_%w]+color[-%w]*%)",
+    pattern = "var%(" .. config.options.variable_pattern .. "%)",
     group = function (_, match)
       local match_value = match:match("var%((.+)%)")
-      local color = colors_from_file[match_value] or "#000000"
+      local color = colors_from_file[match_value] or config.options.initial_variable_color
       return plugin.compute_hex_color_group(color, "bg")
     end
   }
