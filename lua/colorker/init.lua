@@ -33,13 +33,18 @@ end
 
 -- Crear un commando para la funcionalidad
 vim.api.nvim_create_user_command("Colorker", function(args)
-  local attempt_limit = tonumber(args.fargs[1] or config.options.parent_search_limit)
-  local fname = args.fargs[2] or config.options.filename_to_track
+  if string.len(args.fargs[1] or "") > 1 then
+    args.fargs[1], args.fargs[2], args.fargs[3] = 1, args.fargs[1], args.fargs[2]
+  end
 
-  M.get_colors_from_file(fname, attempt_limit)
+  local attempt_limit = args.fargs[1] or config.options.parent_search_limit
+  local fname = args.fargs[2] or config.options.filename_to_track
+  local fdir = args.fargs[3] or nil
+
+  M.get_colors_from_file(tonumber(attempt_limit), fname, fdir)
 end, {desc = "Track the colors of the CSS variables", nargs = "*"})
 
-M.get_colors_from_file = function(fname, attempt_limit)
+M.get_colors_from_file = function(attempt_limit, fname, fdir)
   fname = fname .. ".css"
 
   local variable_pattern = config.options.variable_pattern
@@ -50,7 +55,7 @@ M.get_colors_from_file = function(fname, attempt_limit)
     rgb = 'rgb%(.+%)',
   }
 
-  local fpath = operations.find_file(fname, nil, 1, attempt_limit)
+  local fpath = operations.find_file(fname, fdir, 1, attempt_limit)
   if not fpath then
     vim.print("[Colorker.nvim] Attempt limit reached. Operation cancelled.")
     return
