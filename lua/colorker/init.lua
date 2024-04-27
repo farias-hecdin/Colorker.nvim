@@ -8,11 +8,6 @@ local rgb = require('colorker.colors.rgb')
 
 local colors_from_file = {}
 
-local plugin_exists, plugin = pcall(require, "mini.hipatterns")
-if not plugin_exists then
-  return
-end
-
 M.setup = function(options)
   -- Merge the user-provided options with the default options
   config.options = vim.tbl_deep_extend("keep", options or {}, config.options)
@@ -93,6 +88,7 @@ M.convert_color = function(data)
 end
 
 M.get_settings = function()
+  local plugin = require('mini.hipatterns')
 
   local data = {
     pattern = "var%(" .. config.options.variable_pattern .. "%)",
