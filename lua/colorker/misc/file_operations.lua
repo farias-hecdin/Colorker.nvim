@@ -1,6 +1,6 @@
 local M = {}
 
--- Buscar el archivo "*.css" en el directorios actual y superiores.
+-- Search for the file "*.css" in the current directory and parent directories.
 M.find_file = function(fname, dir, attempt, limit)
   if not attempt or attempt > limit then
     return
@@ -30,7 +30,7 @@ M.find_file = function(fname, dir, attempt, limit)
   return M.find_file(fname, dir, attempt + 1, limit)
 end
 
--- Abrir un archivo y retornar su contenido.
+-- Open a file and return its contents.
 M.open_file = function(fname, variable_pattern, color_pattern)
   local data = {}
   local file = io.open(fname, "r")

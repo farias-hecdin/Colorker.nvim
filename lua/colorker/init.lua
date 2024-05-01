@@ -1,7 +1,7 @@
 local M = {}
 local vim = vim
-local config = require('colorker.misc.config')
-local operations = require('colorker.misc.file_operations')
+local cfg = require('colorker.misc.config')
+local ops = require('colorker.misc.file_operations')
 local lch = require('colorker.colors.lch')
 local hsl = require('colorker.colors.hsl')
 local rgb = require('colorker.colors.rgb')
@@ -10,9 +10,9 @@ local colors_from_file = {}
 
 M.setup = function(options)
   -- Merge the user-provided options with the default options
-  config.options = vim.tbl_deep_extend("keep", options or {}, config.options)
+  cfg.options = vim.tbl_deep_extend("keep", options or {}, cfg.options)
   -- Enable keymap if they are not disableds
-  if not config.options.disable_keymaps then
+  if not cfg.options.disable_keymaps then
     local keymaps_opts = {buffer = 0, silent = true}
     local filetypes = 'css'
     -- Create the keymaps for the specified filetypes
@@ -31,43 +31,37 @@ M.setup = function(options)
   end
 end
 
--- Crear un commando para la funcionalidad
+-- Create a user command called "Colorker"
 vim.api.nvim_create_user_command("Colorker", function(args)
-  if string.len(args.fargs[1] or "") > 1 then
+  if #(args.fargs[1] or "") > 1 then
     args.fargs[1], args.fargs[2], args.fargs[3] = 1, args.fargs[1], args.fargs[2]
   end
 
-  local attempt_limit = args.fargs[1] or config.options.parent_search_limit
-  local fname = args.fargs[2] or config.options.filename_to_track
+  local attempt_limit = args.fargs[1] or cfg.options.parent_search_limit
+  local fname = (args.fargs[2] or cfg.options.filename_to_track) .. ".css"
   local fdir = args.fargs[3] or nil
 
   M.get_colors_from_file(tonumber(attempt_limit), fname, fdir)
 end, {desc = "Track the colors of the CSS variables", nargs = "*"})
 
 M.get_colors_from_file = function(attempt_limit, fname, fdir)
-  fname = fname .. ".css"
-
-  local variable_pattern = config.options.variable_pattern
-  local color_patterns = {
-    hex = '%#%w%w%w%w%w%w',
-    lch = 'lch%(.+%)',
-    hsl = 'hsl%(.+%)',
-    rgb = 'rgb%(.+%)',
-  }
-
-  local fpath = operations.find_file(fname, fdir, 1, attempt_limit)
+  local fpath = ops.find_file(fname, fdir, 1, attempt_limit)
   if not fpath then
     vim.print("[Colorker.nvim] Attempt limit reached. Operation cancelled.")
     return
   end
 
-  local data = operations.open_file(fpath, variable_pattern, color_patterns)
+  local data = ops.open_file(fpath, cfg.options.variable_pattern, {
+    hex = '%#%w%w%w%w%w%w',
+    lch = 'lch%(.+%)',
+    hsl = 'hsl%(.+%)',
+    rgb = 'rgb%(.+%)',
+  })
   if not data then
     return
   end
 
   colors_from_file = M.convert_color(data)
-
   vim.cmd('lua MiniHipatterns.update()')
 end
 
@@ -96,10 +90,10 @@ M.get_settings = function()
   local plugin = require('mini.hipatterns')
 
   local data = {
-    pattern = "var%(" .. config.options.variable_pattern .. "%)",
+    pattern = "var%(" .. cfg.options.variable_pattern .. "%)",
     group = function (_, match)
       local match_value = match:match("var%((.+)%)")
-      local color = colors_from_file[match_value] or config.options.initial_variable_color
+      local color = colors_from_file[match_value] or cfg.options.initial_variable_color
       return plugin.compute_hex_color_group(color, "bg")
     end
   }
