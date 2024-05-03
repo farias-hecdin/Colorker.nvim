@@ -61,7 +61,7 @@ require('CSSVarHighlight').setup({
   initial_variable_color = "#000000",
   -- <boolean> Indicates whether keymaps are disabled
   disable_keymaps = false,
-}
+})
 ```
 
 ### Comandos y atajos de teclado
