@@ -1,14 +1,15 @@
 > [!TIP]
 > Use `Google Translate` to read this file in your native language.
 
-# Colorker.nvim
+# CSSVarHighlight
 
-Este plugin para Neovim es una herramienta útil que te ayudará a identificar fácilmente los colores definidos en variables CSS en archivos específicos, como `main.css` o `style.css`. Cuando el plugin detecta un color en una variable CSS en estos archivos, resalta su aparición, lo que facilita su visualización desde cualquier otro archivo.
+Este plugin para **Neovim** es una herramienta útil que te ayudará a identificar fácilmente los colores definidos en variables CSS en tus archivos de estilo, como `main.css` o `style.css`. Cuando el plugin detecta un color en una variable CSS en estos archivos, resalta su aparición, lo que facilita su visualización desde cualquier otro archivo.
 
 ## Requerimientos
 
-* [`neovim`](https://github.com/neovim/neovim) >= 0.7
-* [`mini.hipatterns`](https://github.com/echasnovski/mini.hipatterns)
+* [`Neovim`](https://github.com/neovim/neovim): Versión 0.7 o superior.
+* [`Mini.hipatterns`](https://github.com/echasnovski/mini.hipatterns): El resaltador de colores.
+* [`CSSPluginHelpers`](https://github.com/farias-hecdin/CSSPluginHelpers): Funciones esenciales para el plugin.
 
 ### Instalación
 
@@ -16,10 +17,11 @@ Usando [`folke/lazy.nvim`](https://github.com/folke/lazy.nvim):
 
 ```lua
 {
-    'farias-hecdin/Colorker.nvim',
+    'farias-hecdin/CSSVarHighlight',
     ft = "css",
     dependencies = {
-        "mini.hipatterns"
+        "echasnovski/mini.hipatterns",
+        "farias-hecdin/CSSPluginHelpers",
     },
     config = true,
     -- If you want to configure some options, replace the previous line with:
@@ -32,12 +34,12 @@ Posteriormente, en la configuración del plugin `mini.hipatterns`:
 
 ```lua
 local hipatterns = require("mini.hipatterns")
-local colorker = require("colorker")
+local CSSVarHighlight = require("CSSVarHighlight")
 
 hipatterns.setup({
     -- Your other settings...
     highlighters = {
-        css_variables = colorker.get_settings()
+        css_variables = CSSVarHighlight.get_settings()
         -- Your other settings...
     }
 })
@@ -48,7 +50,7 @@ hipatterns.setup({
 Estas son las opciones de configuración predeterminadas:
 
 ```lua
-require('colorker').setup({
+require('CSSVarHighlight').setup({
   -- <number> Parent search limit (number of levels to search upwards)
   parent_search_limit = 5,
   -- <string> Name of the file to track (e.g. "main" for main.lua)
@@ -66,12 +68,20 @@ require('colorker').setup({
 
 | Comandos           | Atajos de teclado | Descripción                         |
 | -------------------|------------------ | ----------------------------------- |
-| `Colorker`         | `<leader>cc`      | Activa el plugin y actualiza el resaltado de colores |
+| `CSSVarHighlight`  | `<leader>ch`      | Activa el plugin y actualiza el resaltado de colores |
 
-Puedes ampliar la búsqueda del archivo hacia arriba o seleccionar otro archivo utilizando el comando `:Colorker <number> <string>`. Simplemente reemplaza `<number>` con el número de niveles que deseas buscar hacia arriba y `<string>` con el nombre del archivo que deseas buscar.
+Puedes ampliar la búsqueda de archivos hacia arriba o seleccionar otro archivo utilizando el comando `:CSSVarHighlight`.
 
-Puedes desactivar los atajos de teclado predeterminados estableciendo la opción `disable_keymaps` en `true`
+* Para buscar hacia arriba, utiliza la sintaxis `:CSSVarHighlight <number> <string>`, donde `<number>` es el número de niveles que deseas buscar hacia arriba y `<string>` es el nombre del archivo. El plugin analizará cada nivel hasta encontrar el archivo deseado.
+
+* Para buscar hacia abajo o en un directorio específico, utiliza la sintaxis `:CSSVarHighlight <string> <string>`, donde el primer `<string>` es el nombre del archivo y el segundo `<string>` es la ruta del directorio donde deseas buscar. Por ejemplo:
+
+```
+:CSSVarHighlight filename file/path/to/search
+```
+
+Si deseas desactivar los atajos de teclado predeterminados, puedes establecer la opción  `disable_keymaps` en `true`
 
 ## Licencia
 
-Colorker.nvim está bajo la licencia MIT. Consulta el archivo `LICENSE` para obtener más información.
+CSSVarHighlight está bajo la licencia MIT. Consulta el archivo `LICENSE` para obtener más información.
