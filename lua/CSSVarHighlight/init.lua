@@ -79,7 +79,7 @@ M.get_settings = function()
   local plugin = require('mini.hipatterns')
 
   local data = {
-    pattern = "var%(.+%)",
+    pattern = "var%(" .. cfg.options.variable_pattern .. "%)",
     group = function (_, match)
       local match_value = match:match("var%((.+)%)")
       local color = colors_from_file[match_value] or cfg.options.initial_variable_color
